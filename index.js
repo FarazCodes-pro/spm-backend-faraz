@@ -6,6 +6,9 @@ import cors from "cors";
 // Import your routes
 import userRoutes from "./Routes/userRote.js"; // make sure this path is correct
 import productRoutes from "./Routes/productRoutes.js"; // make sure this path is correct
+
+import { swaggerUi, swaggerSpec } from "./swagger.js"; // Adjust path if needed
+
 import { seedProducts } from "./seed.js";
 
 // Configure environment
@@ -21,15 +24,19 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Swagger Docs Route
+
 // Middleware
 app.use(express.json());
 app.use(cors());
 
 // Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/user", userRoutes); // example: /api/user/register, /api/user/login
 app.use("/api/products", productRoutes);
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
 });

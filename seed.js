@@ -1,3 +1,4 @@
+//script to add vast
 import dotenv from 'dotenv';
 import connectDB from './Config/db.js';
 import Product from './Model/Product.Model.js';
