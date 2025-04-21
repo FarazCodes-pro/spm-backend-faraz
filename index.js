@@ -5,12 +5,17 @@ import cors from "cors";
 
 // Import your routes
 import userRoutes from "./Routes/userRote.js"; // make sure this path is correct
+import productRoutes from "./Routes/productRoutes.js"; // make sure this path is correct
+import { seedProducts } from "./seed.js";
 
 // Configure environment
 dotenv.config();
 
 // Connect to MongoDB
 connectDB();
+
+//Insert data script
+//seedProducts()
 
 // App setup
 const app = express();
@@ -22,6 +27,7 @@ app.use(cors());
 
 // Routes
 app.use("/api/user", userRoutes); // example: /api/user/register, /api/user/login
+app.use("/api/products", productRoutes);
 
 // Start server
 app.listen(PORT, () => {

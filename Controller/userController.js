@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../Model/User.Model.js";
+import Product from "../Model/Product.Model.js";
 
 // REGISTER CONTROLLER
 export const userRegisterController = async (req, res) => {
@@ -89,5 +90,80 @@ export const userLoginController = async (req, res) => {
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const getWishlistController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).populate({
+      path: 'wishlist',
+      select: 'name description price originalPrice image category rating discount',
+    });
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({
+      success: true,
+      message: 'Wishlist fetched successfully',
+      data: user.wishlist,
+    });
+  } catch (error) {
+    console.error('Get Wishlist Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const addToWishlistController = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    //console.log(req.user.id)
+    const userId = req.user.id;
+
+    //console.log("User ID:", userId, "Product ID:", productId);
+
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Find user
+    const user = await User.findById(userId);
+
+    // Check if product is already in wishlist
+    if (user.wishlist.includes(productId)) {
+      return res.status(400).json({ message: "Product already in wishlist" });
+    }
+
+    // Add product to wishlist
+    user.wishlist.push(productId);
+    await user.save();
+
+    res.status(200).json({ message: "Product added to wishlist", wishlist: user.wishlist });
+  } catch (error) {
+    console.error("Add to Wishlist Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const removeFromWishlistController = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product removed from wishlist' });
+  } catch (error) {
+    console.error('Remove Wishlist Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
