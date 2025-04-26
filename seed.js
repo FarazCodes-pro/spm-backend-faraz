@@ -1,3 +1,4 @@
+// script.js
 import mongoose from "mongoose";
 import xlsx from "xlsx";
 import path from "path";
@@ -40,9 +41,18 @@ async function importDataFromExcel() {
       imageLink: item["Image Link"],
     }));
 
-    // Insert all products
-    const result = await Product.insertMany(products);
-    console.log(`✅ Successfully imported ${result.length} products`);
+    try {
+      // Insert all products (continue on duplicates)
+      const result = await Product.insertMany(products, { ordered: false });
+      console.log(`✅ Successfully imported ${result.length} products (some duplicates may have been skipped)`);
+    } catch (bulkError) {
+      console.error("⚠️ Some products could not be imported due to duplicates or errors.");
+      if (bulkError.writeErrors) {
+        console.log(`🔎 ${bulkError.writeErrors.length} products failed to insert.`);
+      } else {
+        console.error("❌ Unexpected error during bulk insert:", bulkError.message);
+      }
+    }
 
   } catch (error) {
     console.error("❌ Error during import process:", error.message);

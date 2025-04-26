@@ -99,10 +99,7 @@ export const getWishlistController = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId).populate({
-      path: 'wishlist',
-      select: 'name description price originalPrice image category rating discount',
-    });
+    const user = await User.findById(userId);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -118,30 +115,31 @@ export const getWishlistController = async (req, res) => {
 };
 
 
+
 export const addToWishlistController = async (req, res) => {
   try {
     const { productId } = req.body;
-    //console.log(req.user.id)
     const userId = req.user.id;
 
-    //console.log("User ID:", userId, "Product ID:", productId);
-
-    // Check if product exists
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Find user
     const user = await User.findById(userId);
 
-    // Check if product is already in wishlist
-    if (user.wishlist.includes(productId)) {
+    // Check if already in wishlist (by product name)
+    const alreadyExists = user.wishlist.some(item => item.productName === product.productName);
+    if (alreadyExists) {
       return res.status(400).json({ message: "Product already in wishlist" });
     }
 
-    // Add product to wishlist
-    user.wishlist.push(productId);
+    // Add product name + link
+    user.wishlist.push({
+      productName: product.productName,
+      productLink: product.productLink,
+    });
+
     await user.save();
 
     res.status(200).json({ message: "Product added to wishlist", wishlist: user.wishlist });
@@ -151,15 +149,17 @@ export const addToWishlistController = async (req, res) => {
   }
 };
 
+
 export const removeFromWishlistController = async (req, res) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.params; // Get wishlist item ID
     const userId = req.user.id;
+    console.log(userId, productId);
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+    user.wishlist = user.wishlist.filter(item => item._id.toString() !== productId);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product removed from wishlist' });

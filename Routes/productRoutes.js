@@ -5,38 +5,34 @@ const router = express.Router();
 
 // Define routes for products
 
+// @route   POST /create
+// @desc    Add a new product
+// @access  Private (requires signin)
 /**
  * @swagger
- * /api/products/create:
+ * /create:
  *   post:
- *     summary: Create a new product
- *     tags: [Products]
+ *     summary: Add a new product
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Product
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - name
- *               - description
- *               - price
- *               - originalPrice
- *               - image
- *               - category
- *               - rating
  *             properties:
  *               name:
- *                 type: string
- *               description:
  *                 type: string
  *               price:
  *                 type: number
  *               originalPrice:
  *                 type: number
  *               image:
+ *                 type: string
+ *               description:
  *                 type: string
  *               category:
  *                 type: string
@@ -46,92 +42,73 @@ const router = express.Router();
  *                 type: number
  *     responses:
  *       201:
- *         description: Product created successfully
+ *         description: Product added successfully
  *       400:
- *         description: Bad request
+ *         description: Missing required fields
  *       500:
  *         description: Internal server error
  */
 router.post("/create", addProduct);
 
+// @route   GET /getAll
+// @desc    Get all products (with pagination and optional brand filter)
+// @access  Public
 /**
  * @swagger
- * /api/products/getAll:
+ * /getAll:
  *   get:
- *     summary: Get all products
- *     tags: [Products]
+ *     summary: Get all products with pagination and optional brand filter
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Page number (default is 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - name: limit
+ *         in: query
+ *         description: Number of products per page (default is 10)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *       - name: brand
+ *         in: query
+ *         description: Filter products by brand
+ *         required: false
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: A list of products
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   name:
- *                     type: string
- *                   description:
- *                     type: string
- *                   price:
- *                     type: number
- *                   originalPrice:
- *                     type: number
- *                   image:
- *                     type: string
- *                   category:
- *                     type: string
- *                   rating:
- *                     type: number
- *                   discount:
- *                     type: number
+ *         description: List of products
  *       500:
  *         description: Internal server error
  */
 router.get("/getAll", getAllProducts);
 
+// @route   GET /getProduct/:productId
+// @desc    Get product details by ID
+// @access  Public
 /**
  * @swagger
- * /api/products/getProduct/{productId}:
+ * /getProduct/{productId}:
  *   get:
- *     summary: Get a product by its ID
- *     tags: [Products]
+ *     summary: Get product details by ID
+ *     tags:
+ *       - Product
  *     parameters:
- *       - in: path
- *         name: productId
+ *       - name: productId
+ *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the product
+ *         description: Product ID
  *     responses:
  *       200:
- *         description: A single product object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 price:
- *                   type: number
- *                 originalPrice:
- *                   type: number
- *                 image:
- *                   type: string
- *                 category:
- *                   type: string
- *                 rating:
- *                   type: number
- *                 discount:
- *                   type: number
+ *         description: Product details
  *       404:
  *         description: Product not found
  *       500:
@@ -139,49 +116,28 @@ router.get("/getAll", getAllProducts);
  */
 router.get("/getProduct/:productId", getByProductId);
 
+// @route   GET /related/:productId
+// @desc    Get related products by category
+// @access  Public
 /**
  * @swagger
- * /api/products/related/{productId}:
+ * /related/{productId}:
  *   get:
- *     summary: Get related products based on the given product ID
- *     tags: [Products]
+ *     summary: Get related products by category
+ *     tags:
+ *       - Product
  *     parameters:
- *       - in: path
- *         name: productId
+ *       - name: productId
+ *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the product to find related products
+ *         description: Product ID
  *     responses:
  *       200:
- *         description: A list of related products
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   name:
- *                     type: string
- *                   description:
- *                     type: string
- *                   price:
- *                     type: number
- *                   originalPrice:
- *                     type: number
- *                   image:
- *                     type: string
- *                   category:
- *                     type: string
- *                   rating:
- *                     type: number
- *                   discount:
- *                     type: number
+ *         description: List of related products
  *       404:
- *         description: Related products not found
+ *         description: Product not found
  *       500:
  *         description: Internal server error
  */

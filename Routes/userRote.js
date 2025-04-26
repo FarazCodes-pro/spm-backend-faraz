@@ -73,57 +73,40 @@ router.post("/register", userRegisterController);
  */
 router.post("/login", userLoginController);
 
+// @route   GET /wishlist
+// @desc    Get user's wishlist
+// @access  Private (requires signin)
 /**
  * @swagger
- * /api/users/wishlist:
+ * /wishlist:
  *   get:
- *     summary: Get the user's wishlist
- *     tags: [Users]
+ *     summary: Get user's wishlist
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Wishlist
  *     responses:
  *       200:
- *         description: The user's wishlist
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   name:
- *                     type: string
- *                   description:
- *                     type: string
- *                   price:
- *                     type: number
- *                   originalPrice:
- *                     type: number
- *                   image:
- *                     type: string
- *                   category:
- *                     type: string
- *                   rating:
- *                     type: number
- *                   discount:
- *                     type: number
+ *         description: Wishlist fetched successfully
  *       401:
- *         description: Unauthorized (User not signed in)
- *       500:
- *         description: Internal server error
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
  */
 router.get("/wishlist", requireSignin, getWishlistController);
 
+// @route   POST /addtowishlist
+// @desc    Add product to wishlist
+// @access  Private (requires signin)
 /**
  * @swagger
- * /api/users/addtowishlist:
+ * /addtowishlist:
  *   post:
- *     summary: Add a product to the user's wishlist
- *     tags: [Users]
+ *     summary: Add a product to wishlist
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Wishlist
  *     requestBody:
  *       required: true
  *       content:
@@ -133,41 +116,47 @@ router.get("/wishlist", requireSignin, getWishlistController);
  *             properties:
  *               productId:
  *                 type: string
+ *                 description: The ID of the product to add
  *     responses:
  *       200:
- *         description: Product added to wishlist successfully
+ *         description: Product added to wishlist
+ *       400:
+ *         description: Product already in wishlist
  *       401:
- *         description: Unauthorized (User not signed in)
- *       500:
- *         description: Internal server error
+ *         description: Unauthorized
+ *       404:
+ *         description: Product not found
  */
 router.post("/addtowishlist", requireSignin, addToWishlistController);
 
+// @route   DELETE /removefromwishlist/:productId
+// @desc    Remove product from wishlist by wishlist item ID
+// @access  Private (requires signin)
 /**
  * @swagger
- * /api/users/removefromwishlist/{productId}:
+ * /removefromwishlist/{productId}:
  *   delete:
- *     summary: Remove a product from the user's wishlist
- *     tags: [Users]
+ *     summary: Remove a product from wishlist
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Wishlist
  *     parameters:
- *       - in: path
- *         name: productId
+ *       - name: productId
+ *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the product to be removed from the wishlist
+ *         description: The wishlist item's _id to remove
  *     responses:
  *       200:
- *         description: Product removed from wishlist successfully
+ *         description: Product removed from wishlist
  *       401:
- *         description: Unauthorized (User not signed in)
+ *         description: Unauthorized
  *       404:
- *         description: Product not found in wishlist
- *       500:
- *         description: Internal server error
+ *         description: User not found
  */
 router.delete("/removefromwishlist/:productId", requireSignin, removeFromWishlistController);
+
 
 export default router;

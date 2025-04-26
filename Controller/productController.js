@@ -3,18 +3,16 @@ import Product from "../Model/Product.Model.js";
 export const addProduct = async (req, res) => {
   try {
     const {
-      name,
-      price,
-      originalPrice,
-      image,
-      description,
-      category,
-      rating,
-      discount,
+      brand,
+      productName,
+      regularPrice,
+      salePrice,
+      productLink,
+      imageLink,
     } = req.body;
 
     // Validate required fields
-    if (!name || !price || !image || !description || !category) {
+    if (!brand || !productName || !regularPrice || !salePrice || !productLink || !imageLink) {
       return res
         .status(400)
         .json({ message: "Please fill all required fields" });
@@ -22,14 +20,12 @@ export const addProduct = async (req, res) => {
 
     // Create a new product instance
     const newProduct = new Product({
-      name,
-      price,
-      originalPrice,
-      image,
-      description,
-      category,
-      rating,
-      discount,
+      brand,
+      productName,
+      regularPrice,
+      salePrice,
+      productLink,
+      imageLink,
     });
 
     // Save the product to the database
@@ -43,7 +39,6 @@ export const addProduct = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -72,7 +67,6 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const getByProductId = async (req, res) => {
   try {
