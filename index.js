@@ -4,10 +4,10 @@ import connectDB from "./Config/db.js";
 import cors from "cors";
 
 // Import your routes
-import userRoutes from "./Routes/userRote.js"; 
-import productRoutes from "./Routes/productRoutes.js"; 
+import userRoutes from "./Routes/userRote.js";
+import productRoutes from "./Routes/productRoutes.js";
 
-import { swaggerUi, swaggerSpec } from "./swagger.js"; 
+import { swaggerUi, swaggerSpec } from "./swagger.js";
 
 import { seedProducts } from "./seed.js";
 

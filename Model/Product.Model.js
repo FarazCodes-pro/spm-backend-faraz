@@ -1,52 +1,43 @@
+// Model/Product.Model.js
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-  name: {
+  brand: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  productName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  regularPrice: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  salePrice: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  productLink: {
     type: String,
     required: true,
     trim: true,
+    unique: true // Ensure no duplicate product links
   },
-  description: {
+  imageLink: {
     type: String,
     required: true,
-    trim: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  originalPrice: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  rating: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 5,
-  },
-  discount: {
-    type: Number,
+    trim: true
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+    default: Date.now
+  }
+}, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
 

@@ -6,6 +6,7 @@ import Product from "../Model/Product.Model.js";
 // REGISTER CONTROLLER
 export const userRegisterController = async (req, res) => {
   const { name, email, password } = req.body;
+  console.log(name, email, password);
   try {
     // Validate the request body
     if (!name || !email || !password) {
