@@ -49,13 +49,13 @@ export const getAllProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const category = req.query.category;
+    const brand = req.query.brand;
     const skip = (page - 1) * limit;
 
     // Build filter conditionally
     const filter = {};
-    if (category) {
-      filter.category = category;
+    if (brand) {
+      filter.brand = brand;
     }
 
     const total = await Product.countDocuments(filter);

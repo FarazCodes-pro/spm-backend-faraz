@@ -9,16 +9,11 @@ import productRoutes from "./Routes/productRoutes.js";
 
 import { swaggerUi, swaggerSpec } from "./swagger.js";
 
-import { seedProducts } from "./seed.js";
-
 // Configure environment
 dotenv.config();
 
 // Connect to MongoDB
 connectDB();
-
-//Insert data script
-//seedProducts()
 
 // App setup
 const app = express();

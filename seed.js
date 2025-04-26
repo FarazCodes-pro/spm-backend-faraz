@@ -1,4 +1,3 @@
-// script.js
 import mongoose from "mongoose";
 import xlsx from "xlsx";
 import path from "path";
