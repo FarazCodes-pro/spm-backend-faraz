@@ -31,7 +31,13 @@ app.use("/api/user", userRoutes); // example: /api/user/register, /api/user/logi
 app.use("/api/products", productRoutes);
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+//   console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
+// });
+const express = require('express');
+const app = express();
+// middlewares and routes...
+
+module.exports = app; // 👈 export the app for Vercel
+
